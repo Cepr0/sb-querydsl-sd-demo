@@ -3,23 +3,24 @@ package io.github.cepr0.demo;
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Data
 @Entity
 @Table(name = "models")
 public class Model {
-	@Id
-	@GeneratedValue
-	private UUID id;
-	@NotNull private Integer number;
-	@NotBlank private String name;
+	@Id @GeneratedValue private UUID id;
+	private Integer number;
+	private String name;
 
 	Model(Integer number) {
 		this.number = number;
 		this.name = "Model" + number;
+	}
+
+	public Model(Integer number, String name) {
+		this.number = number;
+		this.name = name;
 	}
 
 	@PrePersist
