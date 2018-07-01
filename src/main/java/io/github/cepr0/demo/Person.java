@@ -10,7 +10,7 @@ import java.time.temporal.ChronoUnit;
 
 @Data
 @Entity
-@Table(name = "models")
+@Table(name = "people")
 public class Person {
 
 	@Id
