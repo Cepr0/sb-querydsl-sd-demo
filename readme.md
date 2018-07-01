@@ -3,10 +3,10 @@
 With [Querydsl](https://docs.spring.io/spring-data/commons/docs/current/reference/html/#core.extensions.querydsl) and [Web support](https://docs.spring.io/spring-data/commons/docs/current/reference/html/#core.web) 
 Spring Data extensions we can easy implement a 'REST query language' to filter the data of the specific entity.
 
-To do this we can just extend our repo as well from `QuerydslPredicateExecutor`, add `Predicate predicate` with annotation `@QuerydslPredicate`
+To do this we can just extend our repo from `QuerydslPredicateExecutor`, add `Predicate` with annotation `@QuerydslPredicate`
 as argument to our REST controller method and use it in `findAll` method of the repository.     
 
-Then we will be able to request our entity data with base filtering, paging and sorting support, for example like this:
+Then we can request our entity data with base filtering, paging and sorting support, like following for example:
 
     GET /people?name=John&size=10&page=2,sort=name,desc
 
@@ -96,7 +96,7 @@ public interface PersonRepo extends
 ```
 
 Here we excluded unnecessary `id` property from filtering, 
-made 'like' with ignore case filter for all `String` properties of our entity 
+made 'like with ignore case' filter for all `String` properties of our entity 
 and implemented two `between` filters for `age` property and for `dob` property (date of birth).
 
 (see details here: https://stackoverflow.com/a/35158320)       
