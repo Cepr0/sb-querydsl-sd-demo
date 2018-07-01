@@ -59,17 +59,17 @@ public interface PersonRepo extends
 
     @SuppressWarnings("NullableProblems")
     @Override
-    default void customize(QuerydslBindings bindings, QPerson model) {
+    default void customize(QuerydslBindings bindings, QPerson person) {
 
         // Exclude id from filtering
-        bindings.excluding(model.id);
+        bindings.excluding(person.id);
 
         // Make case-insensitive 'like' filter for all string properties 
         bindings.bind(String.class)
                 .first((SingleValueBinding<StringPath, String>) StringExpression::containsIgnoreCase);
 
         // Make a kind of 'between' filter for Person.age property
-        bindings.bind(model.age).all((path, value) -> {
+        bindings.bind(person.age).all((path, value) -> {
             Iterator<? extends Integer> it = value.iterator();
             Integer from = it.next();
             if (value.size() >= 2) {
@@ -81,7 +81,7 @@ public interface PersonRepo extends
         });
 
         // Make a kind of 'between' filter for Person.dob property 
-        bindings.bind(model.dob).all((path, value) -> {
+        bindings.bind(person.dob).all((path, value) -> {
             Iterator<? extends LocalDate> it = value.iterator();
             LocalDate from = it.next();
             if (value.size() >= 2) {
@@ -145,6 +145,22 @@ public class Person {
 }
 ```
 
+To make `customize` method works we have to add parameter `bindings` to `@QuerydslPredicate` of our controller method:
+```java
+@GetMapping
+public ResponseEntity getFiltered(
+        @QuerydslPredicate(root = Person.class, bindings = PersonRepo.class) Predicate predicate,
+        Pageable pageable,
+        PagedResourcesAssembler<Person> assembler
+) {
+    return ResponseEntity.ok(
+            assembler.toResource(
+                    personRepo.findAll(predicate, pageable),
+                    PersonDto::new
+            )
+    );
+}
+```
 #### Setting up Querydsl
 
 To add Querydsl to the project we have to add its dependencies and plugins to our pom.xml:
@@ -195,4 +211,4 @@ Then we have to **compile the project** to generate Q-classes of our entities.
 
 Postman API-docs of this demo can be found [here](https://documenter.getpostman.com/view/788154/RWEnmvWX).
 
-Relatet Stackoverflow post is [here]().
+Relatet Stackoverflow post is [here](https://stackoverflow.com/q/51127468/5380322).
